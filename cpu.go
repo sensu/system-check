@@ -50,6 +50,11 @@ func getCPUMetrics(timestamp int64, interval int) ([]PromMetric, error) {
 
 	metrics := []PromMetric{
 		PromMetric{
+			Label:       "system.cpu.cores",
+			Value:       cores,
+			HelpComment: "Number of cpu cores on the system",
+		},
+		PromMetric{
 			Label:       "system.cpu.idle",
 			Value:       idlePct,
 			HelpComment: "Percent of time cpu was idle",
