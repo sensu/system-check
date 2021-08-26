@@ -15,18 +15,18 @@ func getMemMetrics(timestamp int64) ([]PromMetric, error) {
 	if err != nil {
 		return nil, fmt.Errorf("Error: obtaining swap memory info: %v", err)
 	}
-	memUsed := 0
+	memUsed := float64(0)
 	if vmStat.Total > 0 {
-		memUsed = 100.0 * float64(vnStat.Used) / float64(vmStat.Total)
+		memUsed = 100.0 * float64(vmStat.Used) / float64(vmStat.Total)
 	}
-	swapUsed := 0
+	swapUsed := float64(0)
 	if swapStat.Total > 0 {
 		swapUsed = 100.0 * float64(swapStat.Used) / float64(swapStat.Total)
 	}
 	metrics := []PromMetric{
 		PromMetric{
 			Label:       "system.mem.used",
-			Value:       100.0 * float64(vmStat.Used) / float64(vmStat.Total),
+			Value:       memUsed,
 			HelpComment: "Percent of memory used",
 		},
 		PromMetric{
