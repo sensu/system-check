@@ -52,5 +52,6 @@ func TestCollectMetrics(t *testing.T) {
 	assert.Contains(output, "system.load.load15_per_cpu{} 100")
 	assert.Contains(output, "system.host.uptime{} 100")
 	assert.Contains(output, "system.host.processes{} 100")
+	fmt.Println(output)
 
 }
