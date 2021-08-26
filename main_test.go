@@ -18,6 +18,7 @@ func TestCheckArgs(t *testing.T) {
 
 func TestCollectMetrics(t *testing.T) {
 	assert := assert.New(t)
+	plugin.Interval = 3
 	timestamp := int64(100)
 	metrics, err := collectMetrics(timestamp)
 	assert.NoError(err)
