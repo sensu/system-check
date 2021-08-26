@@ -68,6 +68,7 @@ The [Sensu System Check][1] is a cross-platform [Sensu Metrics Check][7] that pr
 | Name              | Description   |
 |-------------------|---------------|
 | system.host.uptime | Host uptime in seconds 
+| system.host.processes | Number of host processes 
 
 ## Usage examples
 
