@@ -23,7 +23,7 @@ func TestCollectMetrics(t *testing.T) {
 	assert.NoError(err)
 	output := ""
 	for i := range metrics {
-		output = output + fmt.Sprintf("\n")
+		output = output + "\n"
 		output = output + fmt.Sprintf("%s\n", metrics[i].Output())
 	}
 	assert.Contains(output, "system.cpu.cores{} 100")
