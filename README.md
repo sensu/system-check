@@ -64,6 +64,11 @@ The [Sensu System Check][1] is a cross-platform [Sensu Metrics Check][7] that pr
 | system.load.load5_per_cpu | System load averaged over 5 minute normalized by cpu count, values > 1 means system may be overloaded
 | system.load.load15_per_cpu| System load averaged over 15 minute normalized by cpu count, values > 1 means system may be overloaded
 
+#### host
+| Name              | Description   |
+|-------------------|---------------|
+| system.host.uptime | Host uptime in seconds 
+
 ## Usage examples
 
 ### Help output

@@ -105,5 +105,13 @@ func executeCheck(event *v2.Event) (int, error) {
 		fmt.Println("")
 		fmt.Println(metrics[i].Output())
 	}
+	metrics, err = getHostMetrics(timestamp)
+	if err != nil {
+		return sensu.CheckStateCritical, err
+	}
+	for i := range metrics {
+		fmt.Println("")
+		fmt.Println(metrics[i].Output())
+	}
 	return sensu.CheckStateOK, nil
 }
