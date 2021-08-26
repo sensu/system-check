@@ -2,39 +2,13 @@
 ![Go Test](https://github.com/sensu/system-check/workflows/Go%20Test/badge.svg)
 ![goreleaser](https://github.com/sensu/system-check/workflows/goreleaser/badge.svg)
 
-# Check Plugin Template
-
-## Overview
-check-plugin-template is a template repository which wraps the [Sensu Plugin SDK][2].
-To use this project as a template, click the "Use this template" button from the main project page.
-Once the repository is created from this template, you can use the [Sensu Plugin Tool][9] to
-populate the templated fields with the proper values.
-
-## Functionality
-
-After successfully creating a project from this template, update the `Config` struct with any
-configuration options for the plugin, map those values as plugin options in the variable `options`,
-and customize the `checkArgs` and `executeCheck` functions in [main.go][7].
-
-When writing or updating a plugin's README from this template, review the Sensu Community
-[plugin README style guide][3] for content suggestions and guidance. Remove everything
-prior to `# Sensu System Check` from the generated README file, and add additional context about the
-plugin per the style guide.
-
-## Releases with Github Actions
-
-To release a version of your project, simply tag the target sha with a semver release without a `v`
-prefix (ex. `1.0.0`). This will trigger the [GitHub action][5] workflow to [build and release][4]
-the plugin with goreleaser. Register the asset with [Bonsai][8] to share it with the community!
-
-***
-
 # Sensu System Check
 
 ## Table of Contents
 - [Overview](#overview)
-- [Files](#files)
 - [Usage examples](#usage-examples)
+  - [Help output](#help-output)
+  - [Environment variables](#environment-variables)
 - [Configuration](#configuration)
   - [Asset registration](#asset-registration)
   - [Check definition](#check-definition)
@@ -44,14 +18,36 @@ the plugin with goreleaser. Register the asset with [Bonsai][8] to share it with
 
 ## Overview
 
-The Sensu System Check is a [Sensu Check][6] that ...
-
-## Files
+The [Sensu System Check][1] is a cross-platform [Sensu Metrics Check][7] that provides baseline system metrics in prometheus format. 
 
 ## Usage examples
 
-## Configuration
+### Help output
 
+```
+Cross-platform System Check
+
+Usage:
+  system-check [flags]
+  system-check [command]
+
+Available Commands:
+  help        Help about any command
+  version     Print the version number of this plugin
+
+Flags:
+  -h, --help           help for system-check
+  -i, --interval int   Interval in seconds over which to calculate cpu usage metrics (default 3)
+
+Use "system-check [command] --help" for more information about a command.
+```
+
+### Environment variables
+|Argument                       |Environment Variable                 |
+|-------------------------------|-------------------------------------|
+|--interval                     |SYSTEM_CHECK_INTERVAL                |
+
+## Configuration
 ### Asset registration
 
 [Sensu Assets][10] are the best way to make use of this plugin. If you're not using an asset, please
@@ -62,7 +58,7 @@ following command to add the asset:
 sensuctl asset add sensu/system-check
 ```
 
-If you're using an earlier version of sensuctl, you can find the asset on the [Bonsai Asset Index][https://bonsai.sensu.io/assets/sensu/system-check].
+If you're using an earlier version of sensuctl, you can find the asset on the [Bonsai Asset Index][12].
 
 ### Check definition
 
@@ -74,7 +70,7 @@ metadata:
   name: system-check
   namespace: default
 spec:
-  command: system-check --example example_arg
+  command: system-check
   subscriptions:
   - system
   runtime_assets:
@@ -98,14 +94,15 @@ go build
 ## Contributing
 
 For more information about contributing to this plugin, see [Contributing][1].
-
-[1]: https://github.com/sensu/sensu-go/blob/master/CONTRIBUTING.md
-[2]: https://github.com/sensu-community/sensu-plugin-sdk
-[3]: https://github.com/sensu-plugins/community/blob/master/PLUGIN_STYLEGUIDE.md
-[4]: https://github.com/sensu-community/check-plugin-template/blob/master/.github/workflows/release.yml
-[5]: https://github.com/sensu-community/check-plugin-template/actions
-[6]: https://docs.sensu.io/sensu-go/latest/reference/checks/
-[7]: https://github.com/sensu-community/check-plugin-template/blob/master/main.go
-[8]: https://bonsai.sensu.io/
-[9]: https://github.com/sensu-community/sensu-plugin-tool
-[10]: https://docs.sensu.io/sensu-go/latest/reference/assets/
+[1]: https://github.com/sensu/system-check
+[2]: https://github.com/sensu/sensu-go/blob/master/CONTRIBUTING.md
+[3]: https://github.com/sensu/sensu-plugin-sdk
+[4]: https://github.com/sensu-plugins/community/blob/master/PLUGIN_STYLEGUIDE.md
+[5]: https://github.com/sensu/check-plugin-template/blob/master/.github/workflows/release.yml
+[6]: https://github.com/sensu/check-plugin-template/actions
+[7]: https://docs.sensu.io/sensu-go/latest/reference/checks/
+[8]: https://github.com/sensu/check-plugin-template/blob/master/main.go
+[9]: https://bonsai.sensu.io/
+[10]: https://github.com/sensu/sensu-plugin-tool
+[11]: https://docs.sensu.io/sensu-go/latest/reference/assets/
+[12]: https://bonsai.sensu.io/assets/sensu/system-check

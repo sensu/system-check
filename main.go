@@ -29,21 +29,12 @@ var (
 
 	options = []*sensu.PluginConfigOption{
 		&sensu.PluginConfigOption{
-			Path:      "example",
-			Env:       "CHECK_EXAMPLE",
-			Argument:  "example",
-			Shorthand: "e",
-			Default:   "",
-			Usage:     "An example string configuration option",
-			Value:     &plugin.Example,
-		},
-		&sensu.PluginConfigOption{
 			Path:      "interval",
 			Env:       "SYSTEM_CHECK_INTERVAL",
 			Argument:  "interval",
 			Shorthand: "i",
 			Default:   3,
-			Usage:     "An example string configuration option",
+			Usage:     "Interval in seconds over which to calculate cpu usage metrics",
 			Value:     &plugin.Interval,
 		},
 	}
