@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/sensu-community/sensu-plugin-sdk/sensu"
+	"github.com/sensu/sensu-plugin-sdk/sensu"
 	"github.com/stretchr/testify/assert"
 )
 
