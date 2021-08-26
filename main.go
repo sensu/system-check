@@ -78,34 +78,36 @@ func (m PromMetric) Output() string {
 	return fmt.Sprintf("# HELP %s\n%s{%s} %v %v", m.HelpComment, m.Label, strings.Join(m.Tags, ","), m.Timestamp, m.Value)
 }
 
+func collectMetrics(timestamp int64) ([]PromMetric, error) {
+	metrics := []PromMetric{}
+
+	if m, err := getCPUMetrics(timestamp, plugin.Interval); err != nil {
+		return nil, err
+	} else {
+		metrics = append(metrics, m...)
+	}
+	if m, err := getMemMetrics(timestamp); err != nil {
+		return nil, err
+	} else {
+		metrics = append(metrics, m...)
+	}
+	if m, err := getLoadMetrics(timestamp); err != nil {
+		return nil, err
+	} else {
+		metrics = append(metrics, m...)
+	}
+	if m, err := getHostMetrics(timestamp); err != nil {
+		return nil, err
+	} else {
+		metrics = append(metrics, m...)
+	}
+
+	return metrics, nil
+}
+
 func executeCheck(event *v2.Event) (int, error) {
 	timestamp := time.Now().Unix()
-
-	metrics, err := getCPUMetrics(timestamp, plugin.Interval)
-	if err != nil {
-		return sensu.CheckStateCritical, err
-	}
-	for i := range metrics {
-		fmt.Println("")
-		fmt.Println(metrics[i].Output())
-	}
-	metrics, err = getMemMetrics(timestamp)
-	if err != nil {
-		return sensu.CheckStateCritical, err
-	}
-	for i := range metrics {
-		fmt.Println("")
-		fmt.Println(metrics[i].Output())
-	}
-	metrics, err = getLoadMetrics(timestamp)
-	if err != nil {
-		return sensu.CheckStateCritical, err
-	}
-	for i := range metrics {
-		fmt.Println("")
-		fmt.Println(metrics[i].Output())
-	}
-	metrics, err = getHostMetrics(timestamp)
+	metrics, err := collectMetrics(timestamp)
 	if err != nil {
 		return sensu.CheckStateCritical, err
 	}
