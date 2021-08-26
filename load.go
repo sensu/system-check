@@ -19,7 +19,10 @@ func getLoadMetrics(timestamp int64) ([]PromMetric, error) {
 	for _, i := range info {
 		cores += float64(i.Cores)
 	}
-	loadStats, err := load.Avg()
+	var loadStats *load.AvgStat
+	for i := 1; i < 10; i++ {
+		loadStats, err = load.Avg()
+	}
 	if err != nil {
 		return nil, fmt.Errorf("Error: obtaining load stas: %v", err)
 	}
