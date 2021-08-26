@@ -6,6 +6,7 @@
 
 ## Table of Contents
 - [Overview](#overview)
+  - [Output Metrics](#output-metrics)
 - [Usage examples](#usage-examples)
   - [Help output](#help-output)
   - [Environment variables](#environment-variables)
@@ -19,6 +20,49 @@
 ## Overview
 
 The [Sensu System Check][1] is a cross-platform [Sensu Metrics Check][7] that provides baseline system metrics in prometheus format. 
+
+### Output Metrics
+#### cpu
+| Name              | Description   |
+|-------------------|---------------|
+| system.cpu.cores  | Number of cpu cores on the system |
+| system.cpu.idle   | Percent of time cpu was idle |
+| system.cpu.used   | Percent of time cpu was used
+| system.cpu.user   | Percent of time cpu was used by normal processes in user mode
+| system.cpu.system | Percent of time cpu used by processes executed in kernel mode
+| system.cpu.nice   | Percent of time cpu used by niced processes in user mode
+| system.cpu.iowait | Percent of time cpu waiting for I/O to complete
+| system.cpu.irq    | Percent of time cpu servicing interrupts
+| system.cpu.sortirq | Percent of time cpu servicing software interrupts
+| system.cpu.stolen | Percent of time cpu serviced virtual hosts operating systems
+| system.cpu.guest | Percent of time cpu serviced guest operating system
+| system.cpu.guest_nice | Percent of time cpu serviced niced guest operating system
+
+
+
+#### mem
+| Name              | Description   |
+|-------------------|---------------|
+| system.mem.used | Percent of memory used
+| system.mem.used_bytes | Used memory in bytes
+| system.mem.total_bytes | Total memory in bytes
+
+#### swap
+| Name              | Description   |
+|-------------------|---------------|
+| system.swap.used | Percent of swap used
+| system.swap.used_bytes | Used swap in bytes
+| system.swap.total_bytes| Total swap in bytes
+
+#### load
+| Name              | Description   |
+|-------------------|---------------|
+| system.load.load1 | System load averaged over 1 minute, high load value dependant on number of cpus in system
+| system.load.load5 | System load averaged over 5 minute, high load value dependent on number of cpus in system
+| system.load.load15 | System load averaged over 15 minute, high load value dependent on number of cpus in system
+| system.load.load1_per_cpu | System load averaged over 1 minute normalized by cpu count, values > 1 means system may be overloaded
+| system.load.load5_per_cpu | System load averaged over 5 minute normalized by cpu count, values > 1 means system may be overloaded
+| system.load.load15_per_cpu| System load averaged over 15 minute normalized by cpu count, values > 1 means system may be overloaded
 
 ## Usage examples
 
@@ -47,10 +91,12 @@ Use "system-check [command] --help" for more information about a command.
 |-------------------------------|-------------------------------------|
 |--interval                     |SYSTEM_CHECK_INTERVAL                |
 
+
+
 ## Configuration
 ### Asset registration
 
-[Sensu Assets][10] are the best way to make use of this plugin. If you're not using an asset, please
+[Sensu Assets][11] are the best way to make use of this plugin. If you're not using an asset, please
 consider doing so! If you're using sensuctl 5.13 with Sensu Backend 5.13 or later, you can use the
 following command to add the asset:
 
@@ -94,6 +140,7 @@ go build
 ## Contributing
 
 For more information about contributing to this plugin, see [Contributing][1].
+
 [1]: https://github.com/sensu/system-check
 [2]: https://github.com/sensu/sensu-go/blob/master/CONTRIBUTING.md
 [3]: https://github.com/sensu/sensu-plugin-sdk
