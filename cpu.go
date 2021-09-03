@@ -21,13 +21,19 @@ func getCPUMetrics(timestamp int64, interval int) ([]PromMetric, error) {
 	}
 
 	// take the starting time stat
-	start, err := cpu.Times(false)
+	cpuStartTimes, err := cpu.Times(true)
 	if err != nil {
 		return nil, fmt.Errorf("Error: obtaining initial CPU timings: %v", err)
-	} else if len(start) < 1 {
+	} else if len(cpuStartTimes) < 1 {
 		return nil, fmt.Errorf("Error: no CPU timings found")
 	}
-	initialTimings := start[0]
+	totalStartTimes, err := cpu.Times(false)
+	if err != nil {
+		return nil, fmt.Errorf("Error: obtaining initial CPU timings: %v", err)
+	} else if len(totalStartTimes) < 1 {
+		return nil, fmt.Errorf("Error: no CPU timings found")
+	}
+	cpuStartTimes = append(cpuStartTimes, totalStartTimes...)
 
 	//Now lets wait an interval
 	duration, err := time.ParseDuration(fmt.Sprintf("%ds", interval))
@@ -37,90 +43,142 @@ func getCPUMetrics(timestamp int64, interval int) ([]PromMetric, error) {
 	time.Sleep(duration)
 
 	// take the ending time stats
-	final, err := cpu.Times(false)
+	cpuFinalTimes, err := cpu.Times(true)
 	if err != nil {
 		return nil, fmt.Errorf("Error: obtaining final CPU timings: %v", err)
+	} else if len(cpuFinalTimes) < 1 {
+		return nil, fmt.Errorf("Error: no CPU timings found")
 	}
-	// Final timing
-	finalTimings := final[0]
-	// Difference in total time across interval
-	// Note: total time for N cores is N x total time for single core
-	diffTotal := finalTimings.Total() - initialTimings.Total()
-	idlePct := ((finalTimings.Idle - initialTimings.Idle) / diffTotal) * 100
+	totalFinalTimes, err := cpu.Times(false)
+	if err != nil {
+		return nil, fmt.Errorf("Error: obtaining final CPU timings: %v", err)
+	} else if len(totalFinalTimes) < 1 {
+		return nil, fmt.Errorf("Error: no CPU timings found")
+	}
+	cpuFinalTimes = append(cpuFinalTimes, totalFinalTimes...)
 
-	metrics := []PromMetric{
-		PromMetric{
-			Label:       "system_cpu_cores",
-			Value:       cores,
-			Type:        "gauge",
-			HelpComment: "Number of cpu cores on the system",
-		},
-		PromMetric{
-			Label:       "system_cpu_idle",
-			Value:       idlePct,
-			Type:        "gauge",
-			HelpComment: "Percent of time cpu was idle",
-		},
-		PromMetric{
-			Label:       "system_cpu_used",
-			Value:       100 - idlePct,
-			Type:        "gauge",
-			HelpComment: "Percent of time cpu was used",
-		},
-		PromMetric{
-			Label:       "system_cpu_user",
-			Value:       ((finalTimings.User - initialTimings.User) / diffTotal) * 100,
-			Type:        "gauge",
-			HelpComment: "Percent of time cpu was used by normal processes in user mode",
-		},
-		PromMetric{
-			Label:       "system_cpu_system",
-			Value:       ((finalTimings.System - initialTimings.System) / diffTotal) * 100,
-			Type:        "gauge",
-			HelpComment: "Percent of time cpu used by processes executed in kernel mode",
-		},
-		PromMetric{
-			Label:       "system_cpu_nice",
-			Value:       ((finalTimings.Nice - initialTimings.Nice) / diffTotal) * 100,
-			Type:        "gauge",
-			HelpComment: "Percent of time cpu used by niced processes in user mode",
-		},
-		PromMetric{
-			Label:       "system_cpu_iowait",
-			Value:       ((finalTimings.Iowait - initialTimings.Iowait) / diffTotal) * 100,
-			Type:        "gauge",
-			HelpComment: "Percent of time cpu waiting for I/O to complete",
-		},
-		PromMetric{
-			Label:       "system_cpu_irq",
-			Value:       ((finalTimings.Irq - initialTimings.Irq) / diffTotal) * 100,
-			Type:        "gauge",
-			HelpComment: "Percent of time cpu servicing interrupts",
-		},
-		PromMetric{
-			Label:       "system_cpu_sortirq",
-			Value:       ((finalTimings.Softirq - initialTimings.Softirq) / diffTotal) * 100,
-			Type:        "gauge",
-			HelpComment: "Percent of time cpu servicing software interrupts",
-		},
-		PromMetric{
-			Label:       "system_cpu_stolen",
-			Value:       ((finalTimings.Steal - initialTimings.Steal) / diffTotal) * 100,
-			Type:        "gauge",
-			HelpComment: "Percent of time cpu serviced virtual hosts operating systems",
-		},
-		PromMetric{
-			Label:       "system_cpu_guest",
-			Value:       ((finalTimings.Guest - initialTimings.Guest) / diffTotal) * 100,
-			Type:        "gauge",
-			HelpComment: "Percent of time cpu serviced guest operating system",
-		},
-		PromMetric{
-			Label:       "system_cpu_guest_nice",
-			Value:       ((finalTimings.GuestNice - initialTimings.GuestNice) / diffTotal) * 100,
-			Type:        "gauge",
-			HelpComment: "Percent of time cpu serviced niced guest operating system",
-		},
+	metrics := []PromMetric{}
+	for i := range cpuStartTimes {
+		if cpuStartTimes[i].CPU != cpuFinalTimes[i].CPU {
+			return nil, fmt.Errorf("Error: CPU name mismatch between start and final timing collection")
+		}
+		cpuName := cpuStartTimes[i].CPU
+		initialTimings := cpuStartTimes[i]
+		finalTimings := cpuFinalTimes[i]
+		diffTotal := finalTimings.Total() - initialTimings.Total()
+		idlePct := ((finalTimings.Idle - initialTimings.Idle) / diffTotal) * 100
+		cpuMetrics := []PromMetric{
+			PromMetric{
+				Label:       "system_cpu_cores",
+				Value:       cores,
+				Type:        "gauge",
+				HelpComment: "Number of cpu cores on the system",
+				Tags: []string{
+					fmt.Sprintf(`cpu="%s"`, cpuName),
+				},
+			},
+			PromMetric{
+				Label:       "system_total_cpu_idle",
+				Value:       idlePct,
+				Type:        "gauge",
+				HelpComment: "Percent of time all cpus were idle",
+				Tags: []string{
+					fmt.Sprintf(`cpu="%s"`, cpuName),
+				},
+			},
+			PromMetric{
+				Label:       "system_total_cpu_used",
+				Value:       100 - idlePct,
+				Type:        "gauge",
+				HelpComment: "Percent of time all cpus were used",
+				Tags: []string{
+					fmt.Sprintf(`cpu="%s"`, cpuName),
+				},
+			},
+			PromMetric{
+				Label:       "system_total_cpu_user",
+				Value:       ((finalTimings.User - initialTimings.User) / diffTotal) * 100,
+				Type:        "gauge",
+				HelpComment: "Percent of time total cpu was used by normal processes in user mode",
+				Tags: []string{
+					fmt.Sprintf(`cpu="%s"`, cpuName),
+				},
+			},
+			PromMetric{
+				Label:       "system_total_cpu_system",
+				Value:       ((finalTimings.System - initialTimings.System) / diffTotal) * 100,
+				Type:        "gauge",
+				HelpComment: "Percent of time all cpus used by processes executed in kernel mode",
+				Tags: []string{
+					fmt.Sprintf(`cpu="%s"`, cpuName),
+				},
+			},
+			PromMetric{
+				Label:       "system_total_cpu_nice",
+				Value:       ((finalTimings.Nice - initialTimings.Nice) / diffTotal) * 100,
+				Type:        "gauge",
+				HelpComment: "Percent of time all cpus used by niced processes in user mode",
+				Tags: []string{
+					fmt.Sprintf(`cpu="%s"`, cpuName),
+				},
+			},
+			PromMetric{
+				Label:       "system_total_cpu_iowait",
+				Value:       ((finalTimings.Iowait - initialTimings.Iowait) / diffTotal) * 100,
+				Type:        "gauge",
+				HelpComment: "Percent of time all cpus waiting for I/O to complete",
+				Tags: []string{
+					fmt.Sprintf(`cpu="%s"`, cpuName),
+				},
+			},
+			PromMetric{
+				Label:       "system_total_cpu_irq",
+				Value:       ((finalTimings.Irq - initialTimings.Irq) / diffTotal) * 100,
+				Type:        "gauge",
+				HelpComment: "Percent of time all cpus servicing interrupts",
+				Tags: []string{
+					fmt.Sprintf(`cpu="%s"`, cpuName),
+				},
+			},
+			PromMetric{
+				Label:       "system_total_cpu_sortirq",
+				Value:       ((finalTimings.Softirq - initialTimings.Softirq) / diffTotal) * 100,
+				Type:        "gauge",
+				HelpComment: "Percent of time all cpus servicing software interrupts",
+				Tags: []string{
+					fmt.Sprintf(`cpu="%s"`, cpuName),
+				},
+			},
+			PromMetric{
+				Label:       "system_total_cpu_stolen",
+				Value:       ((finalTimings.Steal - initialTimings.Steal) / diffTotal) * 100,
+				Type:        "gauge",
+				HelpComment: "Percent of time all cpus serviced virtual hosts operating systems",
+				Tags: []string{
+					fmt.Sprintf(`cpu="%s"`, cpuName),
+				},
+			},
+			PromMetric{
+				Label:       "system_total_cpu_guest",
+				Value:       ((finalTimings.Guest - initialTimings.Guest) / diffTotal) * 100,
+				Type:        "gauge",
+				HelpComment: "Percent of time all cpus serviced guest operating system",
+				Tags: []string{
+					fmt.Sprintf(`cpu="%s"`, cpuName),
+				},
+			},
+			PromMetric{
+				Label:       "system_total_cpu_guest_nice",
+				Value:       ((finalTimings.GuestNice - initialTimings.GuestNice) / diffTotal) * 100,
+				Type:        "gauge",
+				HelpComment: "Percent of time all cpus serviced niced guest operating system",
+				Tags: []string{
+					fmt.Sprintf(`cpu="%s"`, cpuName),
+				},
+			},
+		}
+		metrics = append(metrics, cpuMetrics...)
+
 	}
 	for i := range metrics {
 		metrics[i].Timestamp = timestamp
