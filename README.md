@@ -23,52 +23,53 @@ The [Sensu System Check][1] is a cross-platform [Sensu Metrics Check][7] that pr
 
 ### Output Metrics
 #### cpu
-| Name              | Description   |
-|-------------------|---------------|
-| system.cpu.cores  | Number of cpu cores on the system |
-| system.cpu.idle   | Percent of time cpu was idle |
-| system.cpu.used   | Percent of time cpu was used
-| system.cpu.user   | Percent of time cpu was used by normal processes in user mode
-| system.cpu.system | Percent of time cpu used by processes executed in kernel mode
-| system.cpu.nice   | Percent of time cpu used by niced processes in user mode
-| system.cpu.iowait | Percent of time cpu waiting for I/O to complete
-| system.cpu.irq    | Percent of time cpu servicing interrupts
-| system.cpu.sortirq | Percent of time cpu servicing software interrupts
-| system.cpu.stolen | Percent of time cpu serviced virtual hosts operating systems
-| system.cpu.guest | Percent of time cpu serviced guest operating system
-| system.cpu.guest_nice | Percent of time cpu serviced niced guest operating system
+| Name                  | Description   |
+|-----------------------|---------------|
+| system_cpu_cores      | Number of cpu cores on the system |
+| system_cpu_idle       | Percent of time cpu was idle<sup>1</sup>  |
+| system_cpu_used       | Percent of time cpu was used<sup>1</sup> |
+| system_cpu_user       | Percent of time cpu was used by normal processes in user mode<sup>1</sup>
+| system_cpu_system     | Percent of time cpu used by processes executed in kernel mode<sup>1</sup>
+| system_cpu_nice       | Percent of time cpu used by niced processes in user mode<sup>1</sup>
+| system_cpu_iowait     | Percent of time cpu waiting for I/O to complete<sup>1</sup>
+| system_cpu_irq        | Percent of time cpu servicing interrupts<sup>1</sup>
+| system_cpu_sortirq    | Percent of time cpu servicing software interrupts<sup>1</sup>
+| system_cpu_stolen     | Percent of time cpu serviced virtual hosts operating systems<sup>1</sup>
+| system_cpu_guest      | Percent of time cpu serviced guest operating system<sup>1</sup>
+| system_cpu_guest_nice | Percent of time cpu serviced niced guest operating system<sup>1</sup>
 
+**Note 1:** Metric tagged by cpu name with cpu-total meaning summed over all cpus on the system (Ex: cpu="cpu0", cpu="cpu-total")
 
 
 #### mem
-| Name              | Description   |
-|-------------------|---------------|
-| system.mem.used | Percent of memory used
-| system.mem.used_bytes | Used memory in bytes
-| system.mem.total_bytes | Total memory in bytes
+| Name                   | Description   |
+|------------------------|---------------|
+| system_mem_used        | Percent of memory used
+| system_mem_used_bytes  | Used memory in bytes
+| system_mem_total_bytes | Total memory in bytes
 
 #### swap
-| Name              | Description   |
-|-------------------|---------------|
-| system.swap.used | Percent of swap used
-| system.swap.used_bytes | Used swap in bytes
-| system.swap.total_bytes| Total swap in bytes
+| Name                   | Description   |
+|------------------------|---------------|
+| system_swap_used       | Percent of swap used
+| system_swap_used_bytes | Used swap in bytes
+| system_swap_total_bytes| Total swap in bytes
 
 #### load
-| Name              | Description   |
-|-------------------|---------------|
-| system.load.load1 | System load averaged over 1 minute, high load value dependant on number of cpus in system
-| system.load.load5 | System load averaged over 5 minute, high load value dependent on number of cpus in system
-| system.load.load15 | System load averaged over 15 minute, high load value dependent on number of cpus in system
-| system.load.load1_per_cpu | System load averaged over 1 minute normalized by cpu count, values > 1 means system may be overloaded
-| system.load.load5_per_cpu | System load averaged over 5 minute normalized by cpu count, values > 1 means system may be overloaded
-| system.load.load15_per_cpu| System load averaged over 15 minute normalized by cpu count, values > 1 means system may be overloaded
+| Name                      | Description   |
+|---------------------------|---------------|
+| system_load_load1         | System load averaged over 1 minute, high load value dependant on number of cpus in system
+| system_load_load5         | System load averaged over 5 minute, high load value dependent on number of cpus in system
+| system_load_load15        | System load averaged over 15 minute, high load value dependent on number of cpus in system
+| system_load_load1_per_cpu | System load averaged over 1 minute normalized by cpu count, values > 1 means system may be overloaded
+| system_load_load5_per_cpu | System load averaged over 5 minute normalized by cpu count, values > 1 means system may be overloaded
+| system_load_load15_per_cpu| System load averaged over 15 minute normalized by cpu count, values > 1 means system may be overloaded
 
 #### host
-| Name              | Description   |
-|-------------------|---------------|
-| system.host.uptime | Host uptime in seconds 
-| system.host.processes | Number of host processes 
+| Name                  | Description   |
+|-----------------------|---------------|
+| system_host_uptime    | Host uptime in seconds 
+| system_host_processes | Number of host processes 
 
 ## Usage examples
 
