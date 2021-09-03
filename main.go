@@ -75,7 +75,7 @@ type PromMetric struct {
 }
 
 func (m PromMetric) Output() string {
-	return fmt.Sprintf("# HELP %s\n%s{%s} %v %v", m.HelpComment, m.Label, strings.Join(m.Tags, ","), m.Timestamp, m.Value)
+	return fmt.Sprintf("# HELP %s\n%s{%s} %v %v", m.HelpComment, strings.ReplaceAll(m.Label,".","_"), strings.Join(m.Tags, ","), m.Timestamp, m.Value)
 }
 
 func collectMetrics(timestamp int64) ([]PromMetric, error) {
