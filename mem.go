@@ -25,33 +25,39 @@ func getMemMetrics(timestamp int64) ([]PromMetric, error) {
 	}
 	metrics := []PromMetric{
 		PromMetric{
-			Label:       "system.mem.used",
+			Label:       "system_mem_used",
 			Value:       memUsed,
+			Type:        "gauge",
 			HelpComment: "Percent of memory used",
 		},
 		PromMetric{
-			Label:       "system.mem.used_bytes",
+			Label:       "system_mem_used_bytes",
 			Value:       float64(vmStat.Used),
+			Type:        "gauge",
 			HelpComment: "Used memory in bytes",
 		},
 		PromMetric{
-			Label:       "system.mem.total_bytes",
+			Label:       "system_mem_total_bytes",
 			Value:       float64(vmStat.Total),
+			Type:        "gauge",
 			HelpComment: "Total memory in bytes",
 		},
 		PromMetric{
-			Label:       "system.swap.used",
+			Label:       "system_swap_used",
 			Value:       swapUsed,
+			Type:        "gauge",
 			HelpComment: "Percent of swap used",
 		},
 		PromMetric{
-			Label:       "system.swap.used_bytes",
+			Label:       "system_swap_used_bytes",
 			Value:       float64(vmStat.Used),
+			Type:        "gauge",
 			HelpComment: "Used swap in bytes",
 		},
 		PromMetric{
-			Label:       "system.swap.total_bytes",
+			Label:       "system_swap_total_bytes",
 			Value:       float64(swapStat.Total),
+			Type:        "gauge",
 			HelpComment: "Total swap in bytes",
 		},
 	}

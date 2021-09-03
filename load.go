@@ -29,33 +29,39 @@ func getLoadMetrics(timestamp int64) ([]PromMetric, error) {
 
 	metrics := []PromMetric{
 		PromMetric{
-			Label:       "system.load.load1",
+			Label:       "system_load_load1",
 			Value:       loadStats.Load1,
+			Type:        "gauge",
 			HelpComment: "System load averaged over 1 minute, high load value dependant on number of cpus in system",
 		},
 		PromMetric{
-			Label:       "system.load.load5",
+			Label:       "system_load_load5",
 			Value:       loadStats.Load5,
+			Type:        "gauge",
 			HelpComment: "System load averaged over 5 minute, high load value dependent on number of cpus in system",
 		},
 		PromMetric{
-			Label:       "system.load.load15",
+			Label:       "system_load_load15",
 			Value:       loadStats.Load15,
+			Type:        "gauge",
 			HelpComment: "System load averaged over 15 minute, high load value dependent on number of cpus in system",
 		},
 		PromMetric{
-			Label:       "system.load.load1_per_cpu",
+			Label:       "system_load_load1_per_cpu",
 			Value:       loadStats.Load1 / cores,
+			Type:        "gauge",
 			HelpComment: "System load averaged over 1 minute normalized by cpu count, values > 1 means system may be overloaded",
 		},
 		PromMetric{
-			Label:       "system.load.load5_per_cpu",
+			Label:       "system_load_load5_per_cpu",
 			Value:       loadStats.Load5 / cores,
+			Type:        "gauge",
 			HelpComment: "System load averaged over 5 minute normalized by cpu count, values > 1 means system may be overloaded",
 		},
 		PromMetric{
-			Label:       "system.load.load15_per_cpu",
+			Label:       "system_load_load15_per_cpu",
 			Value:       loadStats.Load15 / cores,
+			Type:        "gauge",
 			HelpComment: "System load averaged over 15 minute normalized by cpu count, values > 1 means system may be overloaded",
 		},
 	}
