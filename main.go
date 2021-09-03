@@ -67,16 +67,21 @@ func checkArgs(event *v2.Event) (int, error) {
 }
 
 type PromMetric struct {
-	Label       string
-	Tags        []string
-	Timestamp   int64
-	Value       float64
-	Type        string
-	HelpComment string
+	Label           string
+	Tags            []string
+	Timestamp       int64
+	Value           float64
+	Type            string
+	IncludeComments bool
+	HelpComment     string
 }
 
 func (m PromMetric) Output() string {
-	return fmt.Sprintf("# HELP %s [%s] %s\n# TYPE %s %s\n%s{%s} %v %v", m.Label, strings.ToUpper(m.Type), m.HelpComment, m.Label, m.Type, strings.ReplaceAll(m.Label, ".", "_"), strings.Join(m.Tags, ","), m.Timestamp, m.Value)
+	comments := ""
+	if m.IncludeComments {
+		comments = fmt.Sprintf("# HELP %s [%s] %s\n# TYPE %s %s\n", m.Label, strings.ToUpper(m.Type), m.HelpComment, m.Label, strings.ToUpper(m.Type))
+	}
+	return fmt.Sprintf("%s%s{%s} %v %v", comments, strings.ReplaceAll(m.Label, ".", "_"), strings.Join(m.Tags, ","), m.Value, m.Timestamp)
 }
 
 func collectMetrics(timestamp int64) ([]PromMetric, error) {
