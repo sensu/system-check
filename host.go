@@ -18,16 +18,18 @@ func getHostMetrics(timestamp int64) ([]PromMetric, error) {
 	}
 	metrics := []PromMetric{
 		PromMetric{
-			Label:       "system_host_uptime",
-			Value:       float64(uptime),
-			Type:        "counter",
-			HelpComment: "Host uptime in seconds",
+			Label:           "system_host_uptime",
+			Value:           float64(uptime),
+			Type:            "counter",
+			HelpComment:     "Host uptime in seconds",
+			IncludeComments: true,
 		},
 		PromMetric{
-			Label:       "system_host_processes",
-			Value:       float64(info.Procs),
-			Type:        "gauge",
-			HelpComment: "Number of host processes",
+			Label:           "system_host_processes",
+			Value:           float64(info.Procs),
+			Type:            "gauge",
+			HelpComment:     "Number of host processes",
+			IncludeComments: true,
 		},
 	}
 	for i := range metrics {
