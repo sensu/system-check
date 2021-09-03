@@ -107,7 +107,7 @@ func collectMetrics(timestamp int64) ([]PromMetric, error) {
 }
 
 func executeCheck(event *v2.Event) (int, error) {
-	timestamp := time.Now().Unix()
+	timestamp := time.Now().UnixNano() / int64(time.Millisecond)
 	metrics, err := collectMetrics(timestamp)
 	if err != nil {
 		return sensu.CheckStateCritical, err
