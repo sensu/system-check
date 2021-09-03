@@ -71,12 +71,12 @@ type PromMetric struct {
 	Tags        []string
 	Timestamp   int64
 	Value       float64
-  Type string
+	Type        string
 	HelpComment string
 }
 
 func (m PromMetric) Output() string {
-	return fmt.Sprintf("# HELP %s [%s] %s\n# TYPE %s %s\n%s{%s} %v %v", m.Label, strings.ToUpper(m.Type), m.HelpComment, m.Label, m.Type, strings.ReplaceAll(m.Label,".","_"), strings.Join(m.Tags, ","), m.Timestamp, m.Value)
+	return fmt.Sprintf("# HELP %s [%s] %s\n# TYPE %s %s\n%s{%s} %v %v", m.Label, strings.ToUpper(m.Type), m.HelpComment, m.Label, m.Type, strings.ReplaceAll(m.Label, ".", "_"), strings.Join(m.Tags, ","), m.Timestamp, m.Value)
 }
 
 func collectMetrics(timestamp int64) ([]PromMetric, error) {
@@ -107,8 +107,8 @@ func collectMetrics(timestamp int64) ([]PromMetric, error) {
 }
 
 func executeCheck(event *v2.Event) (int, error) {
-	timestamp := time.Now().Unix()
-	metrics, err := collectMetrics(timestamp)
+	milliEpoch := time.Now().UnixNano() / 1000000
+	metrics, err := collectMetrics(milliEpoch)
 	if err != nil {
 		return sensu.CheckStateCritical, err
 	}
