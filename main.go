@@ -118,8 +118,8 @@ func executeCheck(event *v2.Event) (int, error) {
 		return sensu.CheckStateCritical, err
 	}
 	for i := range metrics {
-		fmt.Println("")
 		fmt.Println(metrics[i].Output())
 	}
+	fmt.Println("")
 	return sensu.CheckStateOK, nil
 }
