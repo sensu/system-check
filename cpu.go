@@ -63,6 +63,7 @@ func getCPUMetrics(timestamp int64, interval int) ([]PromMetric, error) {
 			Value:       cores,
 			Type:        "gauge",
 			HelpComment: "Number of cpu cores on the system",
+			IncludeComments: true,
 		},
 	}
 	for i := range cpuStartTimes {
