@@ -29,6 +29,8 @@ func TestCollectMetrics(t *testing.T) {
 		output = output + "\n"
 		output = output + fmt.Sprintf("%s\n", metrics[i].Output())
 	}
+
+	// Check that output contains the expected metrics/tags
 	assert.Contains(output, "system_cpu_cores{}")
 	assert.Contains(output, `system_cpu_idle{cpu="cpu-total"}`)
 	assert.Contains(output, `system_cpu_idle{cpu="cpu0"}`)
@@ -67,9 +69,16 @@ func TestCollectMetrics(t *testing.T) {
 	assert.Contains(output, "system_host_uptime{}")
 	assert.Contains(output, "system_host_processes{}")
 
+	// Check that metrics are parsable
 	var parser expfmt.TextParser
-	_, err = parser.TextToMetricFamilies(strings.NewReader(output))
+	parsedMetrics, err := parser.TextToMetricFamilies(strings.NewReader(output))
 	assert.NoError(err)
+
+	// Check that every metric has a HELP and TYPE line
+	for i := range parsedMetrics {
+		assert.NotNil(parsedMetrics[i].Help)
+		assert.NotNil(parsedMetrics[i].Type)
+	}
 	fmt.Println(output)
 
 }
