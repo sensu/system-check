@@ -54,7 +54,7 @@ func getMemMetrics(timestamp int64) ([]PromMetric, error) {
 		},
 		PromMetric{
 			Label:           "system_swap_used_bytes",
-			Value:           float64(vmStat.Used),
+			Value:           float64(swapStat.Used),
 			Type:            "gauge",
 			HelpComment:     "Used swap in bytes",
 			IncludeComments: true,
