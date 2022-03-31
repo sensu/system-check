@@ -1,6 +1,6 @@
 name: Go Test
 
-on: [push]
+on: [push, workflow_dispatch]
 
 jobs:
   test:
@@ -8,7 +8,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest, windows-latest, ubuntu-latest]
+        os: [macos-latest, windows-latest, ubuntu-latest, macos-11, windows-2022, ubuntu-18.04]
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
