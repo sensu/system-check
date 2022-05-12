@@ -242,7 +242,7 @@ func getCPUMetrics(timestamp int64, interval int) ([]PromMetric, error) {
 			includeComments = true
 		}
 		metrics = append(metrics, PromMetric{
-			Label:           "system_cpu_sortirq",
+			Label:           "system_cpu_softirq",
 			Value:           ((finalTimings.Softirq - initialTimings.Softirq) / diffTotal) * 100,
 			Type:            "gauge",
 			HelpComment:     "Percent of time all cpus servicing software interrupts",
