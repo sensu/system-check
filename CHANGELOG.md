@@ -7,6 +7,7 @@ Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
 
+## [0.1.2] 2022-06-24
 ### Fixed
 - Fix value of system_swap_used_bytes from vmStat.Used to swapStat.Used
 

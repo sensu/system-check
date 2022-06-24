@@ -33,7 +33,7 @@ The [Sensu System Check][1] is a cross-platform [Sensu Metrics Check][7] that pr
 | system_cpu_nice       | Percent of time cpu used by niced processes in user mode<sup>1</sup>
 | system_cpu_iowait     | Percent of time cpu waiting for I/O to complete<sup>1</sup>
 | system_cpu_irq        | Percent of time cpu servicing interrupts<sup>1</sup>
-| system_cpu_sortirq    | Percent of time cpu servicing software interrupts<sup>1</sup>
+| system_cpu_softirq    | Percent of time cpu servicing software interrupts<sup>1</sup>
 | system_cpu_stolen     | Percent of time cpu serviced virtual hosts operating systems<sup>1</sup>
 | system_cpu_guest      | Percent of time cpu serviced guest operating system<sup>1</sup>
 | system_cpu_guest_nice | Percent of time cpu serviced niced guest operating system<sup>1</sup>
